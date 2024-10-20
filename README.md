@@ -14,3 +14,11 @@ Ensure you have the following installed:
 - *Maven 3.x*
 - PostgreSQL (or any configured database)
 - Redis
+
+### Environment Variables
+The following environment variables should be configured for the application to work correctly:
+
+| Variable           | Description                              |
+|--------------------|------------------------------------------|
+| REDIS_HOST    | The hostname or IP address of the Redis server. |
+| REDIS_PORT    | The port number on which the Redis server is listening. |
