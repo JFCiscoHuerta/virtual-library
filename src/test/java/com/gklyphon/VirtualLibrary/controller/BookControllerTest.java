@@ -28,6 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit test for the BookController class.
  * This class tests the endpoints defined in the BookController
  * to ensure they function as expected using MockMvc.
+ *
+ * @author JFCiscoHuerta
+ * @version 1.0
+ * @since 18-Oct-2024
  */
 @AutoConfigureMockMvc
 @WebMvcTest(BookController.class)
@@ -60,7 +64,6 @@ class BookControllerTest {
                         .param("page", "0")
                         .param("size", "10")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf())
         )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.bookList", hasSize(2)))
@@ -79,8 +82,7 @@ class BookControllerTest {
         when(bookService.findById(anyLong())).thenReturn(Data.BOOK);
         mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-        )
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L));
         verify(bookService).findById(anyLong());
@@ -97,7 +99,6 @@ class BookControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/by-title")
                         .param("title","Book1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf())
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Book1"));
@@ -115,7 +116,6 @@ class BookControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/by-isbn")
                         .param("isbn","ISBN1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf())
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isbn").value("ISBN1"));
