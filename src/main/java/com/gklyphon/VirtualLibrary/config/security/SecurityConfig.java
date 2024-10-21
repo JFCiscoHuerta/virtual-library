@@ -13,9 +13,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Security configuration class for the application.
+ * Defines authorization policies and CORS configuration.
+ *
+ * @author JFCiscoHuerta
+ * @version 1.0
+ * @since 19-Oct-2024
+ */
 @Configuration
 public class SecurityConfig {
 
+    /**
+     * Configures the authorization rules for HTTP requests.
+     *
+     * <p>Allows public access to specific GET routes and restricts POST and DELETE
+     * routes to users with the ADMIN role.</p>
+     *
+     * @param http the {@link HttpSecurity} object used to customize HTTP security.
+     * @return the configured {@link SecurityFilterChain} instance.
+     * @throws Exception if an error occurs during security configuration.
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
@@ -30,6 +48,14 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Configures Cross-Origin Resource Sharing (CORS) for the application.
+     *
+     * <p>Allows requests from any origin with various HTTP methods and authorized headers.
+     * Enables the use of credentials in requests.</p>
+     *
+     * @return the configured {@link CorsConfigurationSource} instance.
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
