@@ -2,6 +2,7 @@
 
 ![Java](https://img.shields.io/badge/Java-22-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-green)
+![License](https://img.shields.io/badge/PostgreSQL-16-blue)
 ![License](https://img.shields.io/badge/License-Apache2-yellow)
 ![Build](https://img.shields.io/badge/Build-Maven-red)
 
