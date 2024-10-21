@@ -5,6 +5,8 @@
 ![License](https://img.shields.io/badge/License-Apache2-yellow)
 ![Build](https://img.shields.io/badge/Build-Maven-red)
 
+*Virtual Library* is a REST API developed with Spring Boot that allows managing books and authors efficiently. This application implements CRUD functionality, Swagger documentation, Redis caching, and JavaDoc.
+
 ## Setup
 
 
@@ -25,8 +27,6 @@ The following environment variables should be configured for the application to 
 | POSTGRESQL_URL | The connection URL for the PostgreSQL database. |
 | POSTGRESQL_USERNAME | The username for authenticating to the PostgreSQL database. |
 | POSTGRESQL_PASSWORD | The password for authenticating to the PostgreSQL database. |
-
-
 
 ### Accessing the API Documentation
 To access the API documentation via Swagger, make sure to run the application with the dev profile:
