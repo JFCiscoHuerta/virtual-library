@@ -22,6 +22,10 @@ The following environment variables should be configured for the application to 
 |--------------------|------------------------------------------|
 | REDIS_HOST    | The hostname or IP address of the Redis server. |
 | REDIS_PORT    | The port number on which the Redis server is listening. |
+| POSTGRESQL_URL | The connection URL for the PostgreSQL database. |
+| POSTGRESQL_USERNAME | The username for authenticating to the PostgreSQL database. |
+| POSTGRESQL_PASSWORD | The password for authenticating to the PostgreSQL database. |
+
 
 
 ### Accessing the API Documentation
