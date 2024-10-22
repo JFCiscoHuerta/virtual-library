@@ -4,6 +4,9 @@ import com.gklyphon.VirtualLibrary.exception.custom.ElementNotFoundException;
 import com.gklyphon.VirtualLibrary.model.entity.Author;
 import com.gklyphon.VirtualLibrary.repository.IAuthorRepository;
 import com.gklyphon.VirtualLibrary.service.IAuthorService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -40,6 +43,7 @@ public class AuthorServiceImpl implements IAuthorService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "authors", key = "#id")
     public Author findById(Long id) {
         return authorRepository.findById(id).orElseThrow(
                 () -> new ElementNotFoundException("Author with id: " + id + " not found."));
@@ -52,6 +56,7 @@ public class AuthorServiceImpl implements IAuthorService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "authors")
     public List<Author> findAll() {
         return authorRepository.findAll();
     }
@@ -64,6 +69,7 @@ public class AuthorServiceImpl implements IAuthorService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "authorsPage", key = "#pageable.pageNumber + '-' + #pageable.pageSize")
     public Page<Author> findAllPageable(Pageable pageable) {
         return authorRepository.findAll(pageable);
     }
@@ -76,6 +82,7 @@ public class AuthorServiceImpl implements IAuthorService {
      */
     @Override
     @Transactional
+    @CachePut(value = "authors", key = "#author.id")
     public Author save(Author author) {
         return authorRepository.save(author);
     }
@@ -88,6 +95,7 @@ public class AuthorServiceImpl implements IAuthorService {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "authors", key = "#id")
     public void deleteById(Long id) {
         if (!authorRepository.existsById(id)) {
             throw new ElementNotFoundException("Author with id: " + id + " not found.");
