@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -108,8 +110,8 @@ public class AuthorController {
     @PostMapping("/save-author")
     public ResponseEntity<?> saveAuthor(
             @Parameter(description = "Author object to save")
-            @RequestBody Author author) {
-        if (author!=null) {
+            @Valid @RequestBody Author author, BindingResult result) {
+        if (!result.hasErrors()) {
             Author authorSaved = authorService.save(author);
             return new ResponseEntity<>(author, HttpStatus.CREATED);
         }
