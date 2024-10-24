@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +25,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Author implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 6529685098267757690L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +36,7 @@ public class Author implements Serializable {
     private String lastname;
     private LocalDate birthdate;
     private String country;
-    
-    //private Set<Book> books;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Book> books;
 }

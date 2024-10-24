@@ -115,7 +115,7 @@ public class AuthorController {
             Author authorSaved = authorService.save(author);
             return new ResponseEntity<>(author, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**

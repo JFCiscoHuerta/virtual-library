@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -34,6 +35,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Book implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -8019788932459579321L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,4 +48,7 @@ public class Book implements Serializable {
 
     private BigDecimal price;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 }
