@@ -1,6 +1,8 @@
 package com.gklyphon.VirtualLibrary.controller;
 
+import com.gklyphon.VirtualLibrary.model.entity.Author;
 import com.gklyphon.VirtualLibrary.model.entity.Book;
+import com.gklyphon.VirtualLibrary.service.IAuthorService;
 import com.gklyphon.VirtualLibrary.service.IBookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,10 +36,12 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     private final IBookService bookService;
+    private final IAuthorService authorService;
     private final PagedResourcesAssembler<Book> pagedResourcesAssembler;
 
     @Autowired
-    public BookController(IBookService bookService, PagedResourcesAssembler<Book> pagedResourcesAssembler) {
+    public BookController(IAuthorService authorService, IBookService bookService, PagedResourcesAssembler<Book> pagedResourcesAssembler) {
+        this.authorService = authorService;
         this.bookService = bookService;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
@@ -61,11 +65,11 @@ public class BookController {
     public ResponseEntity<PagedModel<EntityModel<Book>>> getAllBooks(
             @Parameter(description = "The page number to retrieve (default is 0)",
                     required = false, example = "0")
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0", required = false) int page,
             @Parameter(description = "The size of the page to retrieve (default is 10)",
                     required = false,
                     example = "10")
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10", required = false) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Book> books = bookService.findAllPageable(pageable);
@@ -156,12 +160,15 @@ public class BookController {
     @PostMapping("/save-book")
     public ResponseEntity<?> saveBook(
             @Parameter(description = "Book object to save")
-            @Valid @RequestBody Book book, BindingResult result) {
+            @Valid @RequestBody Book book, BindingResult result,
+            @RequestParam(name = "author_id", required = true) Long id) {
         if (!result.hasErrors()) {
+            Author author = authorService.findById(id);
+            book.setAuthor(author);
             Book bookSaved = bookService.save(book);
             return new ResponseEntity<>(book, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**
