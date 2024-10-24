@@ -40,11 +40,11 @@ public class SecurityConfig {
                 (auths) -> auths
                         .requestMatchers(HttpMethod.GET, "/v1/books", "/v1/books/{id}",
                                 "/v1/books/by-title", "/v1/books/by-isbn").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/books/save-book").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/books/delete-book/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/v1/books/save-book").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/v1/books/delete-book/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/v1/authors", "/v1/authors/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/v1/authors/save-author").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/v1/authors/delete-author/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/v1/authors/save-author").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/v1/authors/delete-author/{id}").permitAll()
                         .anyRequest().permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
         ;
