@@ -41,9 +41,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/v1/books", "/v1/books/{id}",
                                 "/v1/books/by-title", "/v1/books/by-isbn").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/books/save-book").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/v1/books/update-book/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/books/delete-book/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/v1/authors", "/v1/authors/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/authors/save-author").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/v1/authors/update-author/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/authors/delete-author/{id}").permitAll()
                         .anyRequest().permitAll())
                 .csrf(AbstractHttpConfigurer::disable)

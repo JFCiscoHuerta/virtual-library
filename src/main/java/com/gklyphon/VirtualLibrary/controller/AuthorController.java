@@ -1,5 +1,6 @@
 package com.gklyphon.VirtualLibrary.controller;
 
+import com.gklyphon.VirtualLibrary.exception.custom.ElementNotFoundException;
 import com.gklyphon.VirtualLibrary.model.entity.Author;
 import com.gklyphon.VirtualLibrary.model.entity.Book;
 import com.gklyphon.VirtualLibrary.service.IAuthorService;
@@ -137,5 +138,43 @@ public class AuthorController {
     ){
         authorService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Updates an author's details by their unique identifier.
+     *
+     * @param id     the unique identifier of the author to update
+     * @param author the new details for the author
+     * @return a ResponseEntity with the updated author or an error status
+     */
+    @Operation(
+            summary = "Update an author by ID",
+            description = "Updates the details of an existing author based on the provided ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Author successfully updated."),
+            @ApiResponse(responseCode = "404", description = "Author not found."),
+            @ApiResponse(responseCode = "500", description = "An internal server error occurred.")
+    })
+    @PutMapping("/update-author/{id}")
+    public ResponseEntity<?> updateAuthor(
+            @PathVariable Long id,
+            @RequestBody Author author) {
+        ResponseEntity<?> responseEntity;
+        try {
+            Author originalAuthor = authorService.findById(id);
+            originalAuthor.setFirstname(author.getFirstname());
+            originalAuthor.setLastname(author.getLastname());;
+            originalAuthor.setCountry(author.getCountry());
+            originalAuthor.setBooks(author.getBooks());
+            originalAuthor.setBirthdate(author.getBirthdate());
+            Author authorUpdated = authorService.save(originalAuthor);
+            responseEntity = new ResponseEntity<>(authorUpdated, HttpStatus.CREATED);
+        } catch (ElementNotFoundException ex) {
+            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return responseEntity;
     }
 }

@@ -128,4 +128,25 @@ public class AuthorControllerTest {
         )
                 .andExpect(status().isOk());
     }
+
+    /**
+     * Tests that an author is updated when calling {@code POST /v1/authors/update-author}.
+     * Verifies that the updated author has ID 1.
+     */
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void shouldReturnAuthorWhenUpdateAuthorCalled() throws Exception {
+        when(authorService.save(any(Author.class))).thenReturn(Data.AUTHOR);
+        when(authorService.findById(anyLong())).thenReturn(Data.AUTHOR);
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put(API_URL + "/update-author/1")
+                                .content(objectMapper.writeValueAsString(Data.AUTHOR))
+                                .with(csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1L));
+        verify(authorService).save(any(Author.class));
+    }
 }
