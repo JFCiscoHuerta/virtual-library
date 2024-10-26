@@ -140,6 +140,22 @@ public class AuthorController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Updates an author's details by their unique identifier.
+     *
+     * @param id     the unique identifier of the author to update
+     * @param author the new details for the author
+     * @return a ResponseEntity with the updated author or an error status
+     */
+    @Operation(
+            summary = "Update an author by ID",
+            description = "Updates the details of an existing author based on the provided ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Author successfully updated."),
+            @ApiResponse(responseCode = "404", description = "Author not found."),
+            @ApiResponse(responseCode = "500", description = "An internal server error occurred.")
+    })
     @PutMapping("/update-author/{id}")
     public ResponseEntity<?> updateAuthor(
             @PathVariable Long id,
