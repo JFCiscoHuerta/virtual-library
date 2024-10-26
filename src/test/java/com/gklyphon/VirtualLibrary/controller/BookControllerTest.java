@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gklyphon.VirtualLibrary.Data;
 import com.gklyphon.VirtualLibrary.exception.custom.ElementNotFoundException;
 import com.gklyphon.VirtualLibrary.model.entity.Book;
+import com.gklyphon.VirtualLibrary.service.impl.AuthorServiceImpl;
 import com.gklyphon.VirtualLibrary.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -39,6 +41,9 @@ class BookControllerTest {
 
     @MockBean
     BookServiceImpl bookService;
+
+    @MockBean
+    AuthorServiceImpl authorService;
 
     @Autowired
     MockMvc mockMvc;
@@ -130,7 +135,9 @@ class BookControllerTest {
     @WithMockUser(username = "ADMIN", roles = "ADMIN")
     void shouldReturnBookWhenSaveBookCalled() throws Exception {
         when(bookService.save(any(Book.class))).thenReturn(Data.BOOK);
+        when(authorService.findById(anyLong())).thenReturn(Data.AUTHOR);
         mockMvc.perform(MockMvcRequestBuilders.post(API_URL + "/save-book")
+                        .param("author_id", "1")
                         .content(objectMapper.writeValueAsString(Data.BOOK))
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
@@ -155,6 +162,25 @@ class BookControllerTest {
                         .with(csrf())
         )
                 .andExpect(status().isOk());
+    }
+
+    /**
+     * Tests the endpoint to update book.
+     * Verifies that the returned book matches the expected ISBN.
+     */
+    @Test
+    @WithMockUser(username = "ADMIN", roles = "ADMIN")
+    void shouldReturnBookWhenUpdateBookCalled() throws Exception {
+        when(bookService.save(any(Book.class))).thenReturn(Data.BOOK);
+        when(bookService.findById(anyLong())).thenReturn(Data.BOOK);
+        mockMvc.perform(MockMvcRequestBuilders.put(API_URL + "/update-book/1")
+                        .content(objectMapper.writeValueAsString(Data.BOOK))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                )
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.isbn").value("ISBN1"));
+        verify(bookService).save(any(Book.class));
     }
 
 }

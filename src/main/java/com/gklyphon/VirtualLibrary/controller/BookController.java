@@ -191,4 +191,41 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Updates a book's details by its unique identifier.
+     *
+     * @param id   the unique identifier of the book to update
+     * @param book the new details for the book
+     * @return a ResponseEntity containing the updated book or an error status
+     */
+    @Operation(
+            summary = "Update a Book by ID",
+            description = "Updates the details of a book in the database using its unique identifier."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Book successfully updated."),
+            @ApiResponse(responseCode = "404", description = "Book not found for the provided ID."),
+            @ApiResponse(responseCode = "500", description = "An internal server error occurred.")
+    })
+    @PutMapping("/update-book/{id}")
+    public ResponseEntity<?> updateBook(
+            @Parameter(description = "Unique identifier of the book to update")
+            @PathVariable Long id,
+            @Parameter(description = "Book object to update")
+            @RequestBody Book book) {
+        try {
+            Book originalBook = bookService.findById(id);
+            if (originalBook == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            originalBook.setIsbn(book.getIsbn());
+            originalBook.setTitle(book.getTitle());
+            originalBook.setPrice(book.getPrice());
+            originalBook.setAuthor(book.getAuthor());
+            Book updatedBook = originalBook = bookService.save(book);
+            return new ResponseEntity<>(updatedBook, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
