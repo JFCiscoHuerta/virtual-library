@@ -1,5 +1,6 @@
 package com.gklyphon.VirtualLibrary.controller;
 
+import com.gklyphon.VirtualLibrary.exception.custom.ElementNotFoundException;
 import com.gklyphon.VirtualLibrary.model.entity.Author;
 import com.gklyphon.VirtualLibrary.model.entity.Book;
 import com.gklyphon.VirtualLibrary.service.IAuthorService;
@@ -137,5 +138,27 @@ public class AuthorController {
     ){
         authorService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/update-author/{id}")
+    public ResponseEntity<?> updateAuthor(
+            @PathVariable Long id,
+            @RequestBody Author author) {
+        ResponseEntity<?> responseEntity;
+        try {
+            Author originalAuthor = authorService.findById(id);
+            originalAuthor.setFirstname(author.getFirstname());
+            originalAuthor.setLastname(author.getLastname());;
+            originalAuthor.setCountry(author.getCountry());
+            originalAuthor.setBooks(author.getBooks());
+            originalAuthor.setBirthdate(author.getBirthdate());
+            Author authorUpdated = authorService.save(originalAuthor);
+            responseEntity = new ResponseEntity<>(authorUpdated, HttpStatus.CREATED);
+        } catch (ElementNotFoundException ex) {
+            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            responseEntity = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return responseEntity;
     }
 }
