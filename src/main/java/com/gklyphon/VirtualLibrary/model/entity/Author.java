@@ -1,9 +1,7 @@
 package com.gklyphon.VirtualLibrary.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,10 +19,12 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "authors")
-@Data
+@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Author implements Serializable {
+public class Author extends Auditable implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6529685098267757690L;

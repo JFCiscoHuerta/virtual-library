@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -163,11 +164,7 @@ public class AuthorController {
         ResponseEntity<?> responseEntity;
         try {
             Author originalAuthor = authorService.findById(id);
-            originalAuthor.setFirstname(author.getFirstname());
-            originalAuthor.setLastname(author.getLastname());;
-            originalAuthor.setCountry(author.getCountry());
-            originalAuthor.setBooks(author.getBooks());
-            originalAuthor.setBirthdate(author.getBirthdate());
+            BeanUtils.copyProperties(author, originalAuthor, "id");
             Author authorUpdated = authorService.save(originalAuthor);
             responseEntity = new ResponseEntity<>(authorUpdated, HttpStatus.CREATED);
         } catch (ElementNotFoundException ex) {
