@@ -1,5 +1,6 @@
 package com.gklyphon.VirtualLibrary.controller;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.gklyphon.VirtualLibrary.model.entity.Author;
 import com.gklyphon.VirtualLibrary.model.entity.Book;
 import com.gklyphon.VirtualLibrary.service.IAuthorService;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.beans.Beans;
 
 /**
  * REST controller for managing Book entities.
@@ -218,11 +222,8 @@ public class BookController {
             if (originalBook == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            originalBook.setIsbn(book.getIsbn());
-            originalBook.setTitle(book.getTitle());
-            originalBook.setPrice(book.getPrice());
-            originalBook.setAuthor(book.getAuthor());
-            Book updatedBook = originalBook = bookService.save(book);
+            BeanUtils.copyProperties(book, originalBook, "id");
+            Book updatedBook = bookService.save(originalBook);
             return new ResponseEntity<>(updatedBook, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
