@@ -1,9 +1,7 @@
 package com.gklyphon.VirtualLibrary.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -30,10 +28,12 @@ import java.math.BigDecimal;
 @Table(name = "books" ,uniqueConstraints = {
         @UniqueConstraint(columnNames = "isbn")
 })
-@Data
+@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book implements Serializable {
+public class Book extends Auditable implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8019788932459579321L;
